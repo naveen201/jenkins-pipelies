@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'person', defaultValue: 'naveen', description: 'Who are you?')
+        booleanParam(name: 'isMale', defaultValue: true, description: "")
+        choice(name: 'City', choices: ['noida', 'mumbai', 'agra'], description: 'Pick something')
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('AS ENV ') {
+            steps {
+                sh 'echo "${BUILD_ID}"'
+            }
+        }        
+        stage('AS parameter ') {
+            steps {
+                sh 'echo "${person}"'
+                sh 'echo "${isMale}"'
+                sh 'echo "${City}"'
+            }
+        }                
+        stage('continue ? ') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."  
+            }    
+            steps {
+                sh 'echo "${BUILD_ID}"'
+            }
+        }            
+        stage('deploy on prod') {
+            steps {
+                sh 'echo "${BUILD_ID}"'
+                echo 'deploy on prod'
+            }    
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }    
+        failure { 
+            echo 'failure'
+        }    
+        success { 
+            echo 'success'   
+        }
+    }
+}
